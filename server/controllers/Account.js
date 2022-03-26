@@ -13,11 +13,11 @@ const login=(req,res)=>{
     const username=`${req.body.username}`;
     const pass=`${req.body.pass}`;
     if(!username||!pass){
-        return res.status(400).json({error:"Requires all fields."});
+        return res.status(400).json({error:'Requires all fields.'});
     }
     return Account.authenticate(username,pass,(err,account)=>{
         if(err||!account){
-            return res.status(401).json({error:"Wrong username or password."});
+            return res.status(401).json({error:'Wrong username or password.'});
         }
         return res.json({redirect:'/maker'});
     });
@@ -27,21 +27,21 @@ const signup=async (req,res)=>{
     const pass=`${req.body.pass}`;
     const pass2=`${req.body.pass2}`;
     if(!username||!pass||!pass2){
-        return res.status(400).json({error:"Requires all fields."});
+        return res.status(400).json({error:'Requires all fields.'});
     }
-    if(pass!=pass2){
-        return res.status(400).json({error:"Passwords must match."});
+    if(pass!==pass2){
+        return res.status(400).json({error:'Passwords must match.'});
     }
     try{
         const hash=await Account.generateHash(pass);
-        const newAccount=new Account({username,passowd:hash});
+        const newAccount=new Account({username,password:hash});
         await newAccount.save();
         return res.json({redirect:'/maker'});
     } catch(err){
         if(err.code===11000){
-            return res.status(400).json({error:"Somebody else has that username."});
+            return res.status(400).json({error:'Somebody else has that username.'});
         }
-        return res.status(400).json({error:"An error occurred."});
+        return res.status(400).json({error:'An error occurred.'});
     }
 };
 module.exports={
